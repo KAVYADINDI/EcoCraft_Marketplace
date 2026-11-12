@@ -1,0 +1,800 @@
+{
+  "database": "ecocraft",
+  "audit_type": "read-only",
+  "collections": {
+    "users": {
+      "document_count": 103,
+      "indexes": [
+        {
+          "name": "_id_",
+          "keys": [
+            [
+              "_id",
+              1
+            ]
+          ],
+          "unique": false
+        },
+        {
+          "name": "uq_userID",
+          "keys": [
+            [
+              "userID",
+              1
+            ]
+          ],
+          "unique": true
+        },
+        {
+          "name": "uq_email",
+          "keys": [
+            [
+              "email",
+              1
+            ]
+          ],
+          "unique": true
+        }
+      ],
+      "validator": {
+        "$jsonSchema": {
+          "bsonType": "object",
+          "properties": {
+            "_id": {
+              "bsonType": "objectId"
+            },
+            "userID": {
+              "bsonType": "string",
+              "minLength": 1
+            },
+            "email": {
+              "bsonType": "string",
+              "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+            },
+            "passwordHash": {
+              "bsonType": "string",
+              "minLength": 1
+            },
+            "role": {
+              "bsonType": "string",
+              "enum": [
+                "admin",
+                "artist",
+                "customer"
+              ]
+            },
+            "personalInfo": {
+              "bsonType": "object",
+              "properties": {
+                "firstName": {
+                  "bsonType": "string",
+                  "minLength": 1
+                },
+                "lastName": {
+                  "bsonType": "string",
+                  "minLength": 1
+                },
+                "dateOfBirth": {
+                  "bsonType": "date"
+                },
+                "address": {
+                  "bsonType": "object",
+                  "properties": {
+                    "street": {
+                      "bsonType": "string",
+                      "minLength": 1
+                    },
+                    "city": {
+                      "bsonType": "string",
+                      "minLength": 1
+                    },
+                    "state": {
+                      "bsonType": "string",
+                      "minLength": 1
+                    },
+                    "zipCode": {
+                      "bsonType": "string",
+                      "minLength": 1
+                    },
+                    "country": {
+                      "bsonType": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "mobile": {
+                  "bsonType": "string"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "firstName",
+                "lastName"
+              ]
+            },
+            "artistProfile": {
+              "bsonType": "object",
+              "properties": {
+                "originStory": {
+                  "bsonType": "string"
+                },
+                "onboardingStatus": {
+                  "bsonType": "string",
+                  "enum": [
+                    "request_received",
+                    "waiting_for_documents",
+                    "received_documents",
+                    "approved",
+                    "rejected"
+                  ]
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "originStory",
+                "onboardingStatus"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "_id",
+            "userID",
+            "email",
+            "passwordHash",
+            "role",
+            "personalInfo"
+          ],
+          "oneOf": [
+            {
+              "properties": {
+                "role": {
+                  "enum": [
+                    "artist"
+                  ]
+                }
+              },
+              "required": [
+                "artistProfile"
+              ]
+            },
+            {
+              "properties": {
+                "role": {
+                  "enum": [
+                    "admin",
+                    "customer"
+                  ]
+                }
+              },
+              "not": {
+                "required": [
+                  "artistProfile"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "validationLevel": "strict",
+      "validationAction": "error"
+    },
+    "products": {
+      "document_count": 22,
+      "indexes": [
+        {
+          "name": "_id_",
+          "keys": [
+            [
+              "_id",
+              1
+            ]
+          ],
+          "unique": false
+        },
+        {
+          "name": "artist_products",
+          "keys": [
+            [
+              "artistId",
+              1
+            ]
+          ],
+          "unique": false
+        },
+        {
+          "name": "catalog_browse",
+          "keys": [
+            [
+              "listProduct",
+              1
+            ],
+            [
+              "category",
+              1
+            ]
+          ],
+          "unique": false
+        }
+      ],
+      "validator": {
+        "$jsonSchema": {
+          "bsonType": "object",
+          "properties": {
+            "_id": {
+              "bsonType": "objectId"
+            },
+            "artistId": {
+              "bsonType": "objectId"
+            },
+            "title": {
+              "bsonType": "string",
+              "minLength": 1
+            },
+            "description": {
+              "bsonType": "string",
+              "minLength": 1
+            },
+            "price": {
+              "bsonType": "decimal",
+              "minimum": 0
+            },
+            "category": {
+              "bsonType": "string",
+              "minLength": 1
+            },
+            "materials": {
+              "bsonType": "array",
+              "items": {
+                "bsonType": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            },
+            "dimensions": {
+              "bsonType": "string"
+            },
+            "careInstructions": {
+              "bsonType": "string"
+            },
+            "sustainability": {
+              "bsonType": "object",
+              "properties": {
+                "certified": {
+                  "bsonType": "bool"
+                },
+                "details": {
+                  "bsonType": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "copyrightText": {
+              "bsonType": "string"
+            },
+            "returnPolicy": {
+              "bsonType": "string"
+            },
+            "images": {
+              "bsonType": "array",
+              "items": {
+                "bsonType": "string"
+              },
+              "minItems": 0
+            },
+            "tags": {
+              "bsonType": "array",
+              "items": {
+                "bsonType": "string"
+              },
+              "minItems": 0
+            },
+            "inventory": {
+              "bsonType": "object",
+              "properties": {
+                "quantityAvailable": {
+                  "bsonType": "int",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "quantityAvailable"
+              ]
+            },
+            "commissionRate": {
+              "bsonType": [
+                "int",
+                "long",
+                "double",
+                "decimal"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            },
+            "approvalStatus": {
+              "bsonType": "string",
+              "enum": [
+                "pending_review",
+                "approved",
+                "rejected"
+              ]
+            },
+            "listProduct": {
+              "bsonType": "bool"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "_id",
+            "artistId",
+            "title",
+            "description",
+            "price",
+            "category",
+            "materials",
+            "inventory",
+            "commissionRate",
+            "approvalStatus",
+            "listProduct"
+          ],
+          "oneOf": [
+            {
+              "properties": {
+                "listProduct": {
+                  "enum": [
+                    false
+                  ]
+                }
+              }
+            },
+            {
+              "properties": {
+                "listProduct": {
+                  "enum": [
+                    true
+                  ]
+                },
+                "approvalStatus": {
+                  "enum": [
+                    "approved"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "validationLevel": "strict",
+      "validationAction": "error"
+    },
+    "cart": {
+      "document_count": 62,
+      "indexes": [
+        {
+          "name": "_id_",
+          "keys": [
+            [
+              "_id",
+              1
+            ]
+          ],
+          "unique": false
+        },
+        {
+          "name": "uq_cart_customer",
+          "keys": [
+            [
+              "customerId",
+              1
+            ]
+          ],
+          "unique": true
+        }
+      ],
+      "validator": {
+        "$jsonSchema": {
+          "bsonType": "object",
+          "properties": {
+            "_id": {
+              "bsonType": "objectId"
+            },
+            "customerId": {
+              "bsonType": "objectId"
+            },
+            "items": {
+              "bsonType": "array",
+              "items": {
+                "bsonType": "object",
+                "properties": {
+                  "productId": {
+                    "bsonType": "objectId"
+                  },
+                  "quantity": {
+                    "bsonType": "int",
+                    "minimum": 1
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "productId",
+                  "quantity"
+                ]
+              },
+              "minItems": 0
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "_id",
+            "customerId",
+            "items"
+          ]
+        }
+      },
+      "validationLevel": "strict",
+      "validationAction": "error"
+    },
+    "orders": {
+      "document_count": 122,
+      "indexes": [
+        {
+          "name": "_id_",
+          "keys": [
+            [
+              "_id",
+              1
+            ]
+          ],
+          "unique": false
+        },
+        {
+          "name": "customer_orders",
+          "keys": [
+            [
+              "customerId",
+              1
+            ]
+          ],
+          "unique": false
+        },
+        {
+          "name": "artist_order_items",
+          "keys": [
+            [
+              "items.productSnapshot.artistId",
+              1
+            ]
+          ],
+          "unique": false
+        }
+      ],
+      "validator": {
+        "$jsonSchema": {
+          "bsonType": "object",
+          "properties": {
+            "_id": {
+              "bsonType": "objectId"
+            },
+            "customerId": {
+              "bsonType": "objectId"
+            },
+            "items": {
+              "bsonType": "array",
+              "items": {
+                "bsonType": "object",
+                "properties": {
+                  "productId": {
+                    "bsonType": "objectId"
+                  },
+                  "productSnapshot": {
+                    "bsonType": "object",
+                    "properties": {
+                      "title": {
+                        "bsonType": "string",
+                        "minLength": 1
+                      },
+                      "artistId": {
+                        "bsonType": "objectId"
+                      },
+                      "artistName": {
+                        "bsonType": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "title",
+                      "artistId",
+                      "artistName"
+                    ]
+                  },
+                  "quantity": {
+                    "bsonType": "int",
+                    "minimum": 1
+                  },
+                  "unitPrice": {
+                    "bsonType": "decimal",
+                    "minimum": 0
+                  },
+                  "commissionRate": {
+                    "bsonType": [
+                      "int",
+                      "long",
+                      "double",
+                      "decimal"
+                    ],
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "commissionAmount": {
+                    "bsonType": "decimal",
+                    "minimum": 0
+                  },
+                  "artistPayout": {
+                    "bsonType": "decimal",
+                    "minimum": 0
+                  },
+                  "status": {
+                    "bsonType": "string",
+                    "enum": [
+                      "active",
+                      "cancelled"
+                    ]
+                  },
+                  "cancelledAt": {
+                    "bsonType": "date"
+                  },
+                  "shipping": {
+                    "bsonType": "object",
+                    "properties": {
+                      "status": {
+                        "bsonType": "string",
+                        "enum": [
+                          "pending",
+                          "shipped",
+                          "delivered"
+                        ]
+                      },
+                      "trackingNumber": {
+                        "bsonType": "string"
+                      },
+                      "shippedAt": {
+                        "bsonType": "date"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "status"
+                    ]
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "productId",
+                  "productSnapshot",
+                  "quantity",
+                  "unitPrice",
+                  "commissionRate",
+                  "commissionAmount",
+                  "artistPayout",
+                  "status",
+                  "shipping"
+                ],
+                "oneOf": [
+                  {
+                    "properties": {
+                      "status": {
+                        "enum": [
+                          "active"
+                        ]
+                      }
+                    },
+                    "not": {
+                      "required": [
+                        "cancelledAt"
+                      ]
+                    }
+                  },
+                  {
+                    "properties": {
+                      "status": {
+                        "enum": [
+                          "cancelled"
+                        ]
+                      },
+                      "shipping": {
+                        "properties": {
+                          "status": {
+                            "enum": [
+                              "pending"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              "minItems": 1
+            },
+            "shippingAddress": {
+              "bsonType": "object",
+              "properties": {
+                "street": {
+                  "bsonType": "string",
+                  "minLength": 1
+                },
+                "city": {
+                  "bsonType": "string",
+                  "minLength": 1
+                },
+                "state": {
+                  "bsonType": "string",
+                  "minLength": 1
+                },
+                "zipCode": {
+                  "bsonType": "string",
+                  "minLength": 1
+                },
+                "country": {
+                  "bsonType": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "street",
+                "city",
+                "state",
+                "zipCode",
+                "country"
+              ]
+            },
+            "totals": {
+              "bsonType": "object",
+              "properties": {
+                "subtotal": {
+                  "bsonType": "decimal",
+                  "minimum": 0
+                },
+                "commissionTotal": {
+                  "bsonType": "decimal",
+                  "minimum": 0
+                },
+                "totalAmount": {
+                  "bsonType": "decimal",
+                  "minimum": 0
+                },
+                "artistPayoutTotal": {
+                  "bsonType": "decimal",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "subtotal",
+                "commissionTotal",
+                "totalAmount",
+                "artistPayoutTotal"
+              ]
+            },
+            "orderStatus": {
+              "bsonType": "string",
+              "enum": [
+                "pending",
+                "partially_shipped",
+                "shipped",
+                "completed",
+                "cancelled"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "_id",
+            "customerId",
+            "items",
+            "shippingAddress",
+            "totals",
+            "orderStatus"
+          ]
+        }
+      },
+      "validationLevel": "strict",
+      "validationAction": "error"
+    },
+    "reviews": {
+      "document_count": 101,
+      "indexes": [
+        {
+          "name": "_id_",
+          "keys": [
+            [
+              "_id",
+              1
+            ]
+          ],
+          "unique": false
+        },
+        {
+          "name": "product_reviews",
+          "keys": [
+            [
+              "productId",
+              1
+            ]
+          ],
+          "unique": false
+        },
+        {
+          "name": "review_order",
+          "keys": [
+            [
+              "orderId",
+              1
+            ]
+          ],
+          "unique": false
+        },
+        {
+          "name": "uq_review_purchase",
+          "keys": [
+            [
+              "customerId",
+              1
+            ],
+            [
+              "orderId",
+              1
+            ],
+            [
+              "productId",
+              1
+            ]
+          ],
+          "unique": true
+        }
+      ],
+      "validator": {
+        "$jsonSchema": {
+          "bsonType": "object",
+          "properties": {
+            "_id": {
+              "bsonType": "objectId"
+            },
+            "productId": {
+              "bsonType": "objectId"
+            },
+            "customerId": {
+              "bsonType": "objectId"
+            },
+            "orderId": {
+              "bsonType": "objectId"
+            },
+            "rating": {
+              "bsonType": "int",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "comment": {
+              "bsonType": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "_id",
+            "productId",
+            "customerId",
+            "orderId",
+            "rating"
+          ]
+        }
+      },
+      "validationLevel": "strict",
+      "validationAction": "error"
+    }
+  },
+  "warnings": []
+}

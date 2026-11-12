@@ -1,0 +1,53 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python environments, bytecode and test output
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.egg-info/
+
+# Frontend and build output
+node_modules/
+dist/
+build/
+
+# Local editor, OS and PowerShell state
+.vscode/
+.idea/
+Microsoft/
+.DS_Store
+Thumbs.db
+
+# Temporary archives, backups and database exports
+*.log
+*.tmp
+*.bak
+*.zip
+*.7z
+*.tar
+*.gz
+*.bson
+*.sqlite3
+*.db
+dump/
+backups/
+
+# Keep the schema/index snapshot required by the project tests
+reports/*
+!reports/atlas_schema_audit.json
