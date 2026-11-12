@@ -32,7 +32,7 @@ The steps below use **Windows PowerShell** from the project root. You'll need Py
 1. Clone the repository and open the folder in VS Code (replace `USERNAME/REPOSITORY` with the actual GitHub location):
 
    ```powershell
-   git clone https://github.com/USERNAME/REPOSITORY.git EcoCraft_Marketplace
+   git clone https://github.com/Rosalyn-DSAI/EcoCraft_Marketplace.git
    cd EcoCraft_Marketplace
    ```
 
