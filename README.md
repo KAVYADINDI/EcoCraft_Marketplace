@@ -136,3 +136,4 @@ EcoCraft is a local coursework application, not a public shopping service. Key l
 - It does not provide password recovery, returns/refunds, or production audit logging.
 - For a shared class demo, use only records the team has approved for testing.
 - Keep the Atlas and Cloudinary secrets out of shared files and chat messages.
+
